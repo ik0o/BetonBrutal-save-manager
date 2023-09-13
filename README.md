@@ -8,11 +8,11 @@ is being complained about by an anti-virus, in which case I will rewrite the inp
 
 ## usage
 
-To simply run bb_save, open the bb_save.exe together with Beton Brutal
+To simply run bb_save, run the bb_save.exe together with Beton Brutal
 
-when running without options:
+### when running without options:
 
-!!! All functions work only when you open the settings in beton brutal !!!
+!!! All functions work only when you open the settings (ESC) in beton brutal !!! <br/>
 (because when you press esc in Beton Brutal your progress is saved in the internal files)
 
 - quicksave : to create a quicksave press F5 and exit settings, your current progress saved.
@@ -22,24 +22,24 @@ when running without options:
 - load      : to load normal save (or any other save) press F2 and open console where the bb_save is
               running and type the name of save file that you want to load.
 
-For convenience, when you load or save, the list of existing save files for a given map is listed at the top.
-All hotkeys for functions are configurable.
-You can only use English letters, numbers, '-' and '_' to name your save files.
-100_m, 200_m, ... - these are the save files I created with heights 100, 200, ...
+For convenience, when you load or save, the list of existing save files for a given map is listed at the top. <br/>
+All hotkeys for functions are configurable. <br/>
+You can only use English letters, numbers, '-' and '_' to name your save files. <br/>
+100_m, 200_m, ... - these are the save files I created with heights 100, 200, ... <br/>
 
-quicksave history:
+### quicksave history:
 
 when you make a quicksave, a quicksave backup is created just in case.
 They're listed in the save list as: 
 `quicksave_b<backup number>`
 default maximum number of backups is 3, but you can configure it by opening config file and change the value
-after max_qsave_history: (new value can be from 0 to 9, 0 - don't make backup)
+after max_qsave_history: (new value can be from 0 to 9, where 0 - don't make backup)
 
-running with options:
+### running with options:
 
--h / --help   : print help text
--c / --config : configure keys
--i / --import : import stats .dat file from another person (specify path to file after this option)
+-h / --help   : print help text <br/>
+-c / --config : configure keys <br/>
+-i / --import : import stats .dat file from another person (specify path to file after this option) <br/>
 
 There are two ways to configure hotkeys:
 1. run bb_save with the -c or --config option and press the new hotkeys
