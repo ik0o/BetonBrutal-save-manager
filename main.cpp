@@ -9,9 +9,9 @@
 #include <map>
 
 const std::string config_file_name = ".\\config";
-const std::string internal_save_folder = ".\\saves\\";
+const std::string internal_save_folder = ".\\save\\";
+const std::string internal_backup_save_folder = ".\\saves\\backup\\";
 const std::string bb_save_folder = std::string{getenv("userprofile")} + "\\appdata\\LocalLow\\Jan Malitschek\\BetonBrutal\\Game\\";
-const std::string backup_save_folder = ".\\saves\\backup\\";
 const std::string save_files[2] = {"Stats.dat", "DLC1Stats.dat"};
 static int current_command = 0;
 static bool redirect_input = false;
@@ -89,6 +89,7 @@ void releaseHook();
 int inputProcessing(int key_stroke, int scan_code);
 int configInputProcessing(int key_stroke, int scan_code);
 
+int setupFolders();
 void exitRoutine(int exit_code);
 BOOL WINAPI ctrlRoutine(DWORD fdwCtrlType);
 int loadConfig();
@@ -304,6 +305,18 @@ int configInputProcessing(int key_stroke, int scan_code){
 
 
 
+int setupFolders(){
+    DWORD folder_exist = GetFileAttributesA(internal_save_folder.c_str());
+    if(folder_exist == INVALID_FILE_ATTRIBUTES){
+        system("mkdir saves");
+    }
+    folder_exist = GetFileAttributesA(internal_backup_save_folder.c_str());
+    if(folder_exist == INVALID_FILE_ATTRIBUTES){
+        system("cd saves && mkdir backup && cd ..");
+    }
+    return 0;
+}
+
 void exitRoutine(int exit_code){
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
     exit(exit_code);
@@ -376,7 +389,7 @@ void listSaveFiles(){
     std::vector<FILETIME> file_lwtimes;
     WIN32_FIND_DATA find_data; 
     
-    HANDLE handle_find = FindFirstFile((backup_save_folder + "*").c_str(),&find_data); 
+    HANDLE handle_find = FindFirstFile((internal_backup_save_folder + "*").c_str(),&find_data); 
     if(handle_find != INVALID_HANDLE_VALUE){
         while(FindNextFile(handle_find,&find_data) != 0){
             if(!(find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
@@ -432,7 +445,7 @@ void quicksaveBackup(unsigned char which_stats){
     int last_quicksave = -1;
     FILETIME tmp_lwtime;
     WIN32_FIND_DATA find_data; 
-    HANDLE handle_find = FindFirstFile((backup_save_folder + "*").c_str(), &find_data); 
+    HANDLE handle_find = FindFirstFile((internal_backup_save_folder + "*").c_str(), &find_data); 
     if(handle_find != INVALID_HANDLE_VALUE){
         while(FindNextFile(handle_find, &find_data) != 0){
             if(!(find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)){
@@ -460,7 +473,7 @@ void quicksaveBackup(unsigned char which_stats){
     last_quicksave = (last_quicksave == -1) ? 0 : last_quicksave;
     last_quicksave = (last_quicksave == assigned_values.at("max_qsave_history")) ? 1 : last_quicksave+1;
     CopyFile((internal_save_folder + std::to_string((int)which_stats) + "quicksave").c_str(), \
-             (backup_save_folder + std::to_string((int)which_stats) + "quicksave_b" + std::to_string(last_quicksave)).c_str(), false);
+             (internal_backup_save_folder + std::to_string((int)which_stats) + "quicksave_b" + std::to_string(last_quicksave)).c_str(), false);
 
 }
 
@@ -499,7 +512,7 @@ int load(std::string input_file_name){
 
     std::ifstream internal_save_file;
     if((int)input_file_name.find("_b") != -1){
-        internal_save_file.open((backup_save_folder + std::to_string((int)which_stats) + input_file_name).c_str(),std::ios::binary);
+        internal_save_file.open((internal_backup_save_folder + std::to_string((int)which_stats) + input_file_name).c_str(),std::ios::binary);
     }else{
         internal_save_file.open((internal_save_folder + std::to_string((int)which_stats) + input_file_name).c_str(),std::ios::binary);
     }
@@ -663,6 +676,13 @@ int main(int argc, char *argv[]){
     }else if(status == 2){
         exitRoutine(0);
     }
+
+    status = setupFolders();
+    if(status == 1){
+        printf("something went wrong!\n");
+        return 1;
+    }
+
     status = loadConfig();
     if(status == 1){
         printf("incorrect config!\n");
@@ -674,6 +694,7 @@ int main(int argc, char *argv[]){
         printf("incorrect config key!\n");
         return 1;
     }
+
     status = (int)SetConsoleCtrlHandler(ctrlRoutine,true);
     if(status == 0){
         printf("cant set ctrl handler!\n");
