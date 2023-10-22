@@ -9,7 +9,7 @@
 #include <map>
 
 const std::string config_file_name = ".\\config";
-const std::string internal_save_folder = ".\\save\\";
+const std::string internal_save_folder = ".\\saves\\";
 const std::string internal_backup_save_folder = ".\\saves\\backup\\";
 const std::string bb_save_folder = std::string{getenv("userprofile")} + "\\appdata\\LocalLow\\Jan Malitschek\\BetonBrutal\\Game\\";
 const std::string save_files[2] = {"Stats.dat", "DLC1Stats.dat"};
