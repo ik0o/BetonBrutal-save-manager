@@ -12,8 +12,9 @@ To simply run bb_save, run the bb_save.exe together with Beton Brutal
 
 ### when running without options:
 
-!!! All functions work only when you open the settings (ESC) in beton brutal !!! <br/>
-(because when you press esc in Beton Brutal your progress is saved in the internal files)
+> [!IMPORTANT]
+> All functions work only when you open the settings (ESC) in beton brutal <br/>
+> (because when you press esc in Beton Brutal your progress is saved in the internal files)
 
 - quicksave : to create a quicksave press F5 and exit settings, your current progress saved.
 - quickload : to load quicksave press F9 and exit settings, you load last quicksave.
